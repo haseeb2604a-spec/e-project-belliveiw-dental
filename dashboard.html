@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="icon" href="images/belleville-dental-favicon.png" type="image/png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Belleville Dental</title>
+    <meta name="description" content="Your private Belleville Dental dashboard.">
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        body { padding-bottom: 0; background: var(--bg-alt); }
+
+        .dash { display: flex; min-height: 100vh; }
+
+        /* ---------- sidebar ---------- */
+        .dash-side {
+            width: 260px; flex-shrink: 0;
+            background: var(--navy); color: #c3d1e0;
+            display: flex; flex-direction: column;
+            position: sticky; top: 0; height: 100vh;
+            padding: 24px 16px;
+        }
+        .dash-brand { display: flex; align-items: center; gap: 10px; padding: 0 8px 22px; color: #fff; font-weight: 700; font-size: 18px; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,.12); margin-bottom: 18px; }
+        .dash-brand img { width: 36px; height: 36px; border-radius: 8px; }
+        .dash-nav { display: flex; flex-direction: column; gap: 4px; flex: 1; }
+        .dash-nav button, .dash-nav a {
+            display: flex; align-items: center; gap: 12px;
+            padding: 12px 14px; border: none; border-radius: 10px;
+            background: transparent; color: #c3d1e0; font-size: 15px; font-weight: 500;
+            text-align: left; text-decoration: none; cursor: pointer; transition: var(--transition);
+        }
+        .dash-nav button:hover, .dash-nav a:hover { background: rgba(255,255,255,.08); color: #fff; }
+        .dash-nav button.active { background: var(--teal); color: #fff; }
+        .dash-nav .ico { width: 22px; text-align: center; }
+        .dash-side .logout { margin-top: auto; background: rgba(255,255,255,.08); }
+
+        /* ---------- main ---------- */
+        .dash-main { flex: 1; min-width: 0; padding: 28px 34px 50px; }
+
+        .dash-top { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-bottom: 26px; }
+        .dash-top h1 { font-size: 24px; font-weight: 700; color: var(--navy); margin: 0; }
+        .dash-user { display: flex; align-items: center; gap: 10px; padding: 6px 16px 6px 6px; background: #fff; border: 1px solid var(--border); border-radius: 50px; font-weight: 600; color: var(--navy); font-size: 14px; }
+        .avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--teal); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; }
+        .menu-toggle { display: none; padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px; background: #fff; font-size: 18px; cursor: pointer; }
+
+        .welcome {
+            padding: 34px; margin-bottom: 26px; border-radius: 18px; color: #fff;
+            background: linear-gradient(120deg, rgba(8,24,52,.96), rgba(8,24,52,.75)), url("images/hero-section.webp") right center / cover;
+            box-shadow: var(--shadow);
+        }
+        .welcome small { color: #7fe0e8; letter-spacing: 3px; font-weight: 600; font-size: 12px; }
+        .welcome h2 { font-size: 32px; font-weight: 700; margin: 8px 0 8px; color: #fff; }
+        .welcome p { color: #d5e1ee; margin: 0 0 18px; max-width: 520px; }
+
+        .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-bottom: 26px; }
+        .stat { padding: 22px; background: #fff; border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow-sm); }
+        .stat .ico { width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; font-size: 22px; background: var(--teal-soft); border-radius: 12px; margin-bottom: 12px; }
+        .stat strong { display: block; font-size: 26px; color: var(--navy); line-height: 1.2; }
+        .stat span { color: var(--text-muted); font-size: 13.5px; }
+
+        .panel { padding: 26px; background: #fff; border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow-sm); margin-bottom: 22px; }
+        .panel h3 { font-size: 19px; font-weight: 700; color: var(--navy); margin: 0 0 6px; }
+        .panel .sub { color: var(--text-muted); font-size: 14.5px; margin-bottom: 18px; }
+
+        .quick { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+        .quick a { display: flex; align-items: center; gap: 12px; padding: 16px; border: 1px solid var(--border); border-radius: 12px; background: var(--bg-alt); color: var(--navy); font-weight: 600; text-decoration: none; transition: var(--transition); }
+        .quick a:hover { border-color: var(--teal); background: var(--teal-soft); transform: translateY(-3px); }
+        .quick .ico { font-size: 22px; }
+
+        .view { display: none; }
+        .view.active { display: block; animation: fadeUp .5s ease; }
+
+        .rating-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--border); }
+        .rating-row:last-child { border-bottom: none; }
+        .rating-row b { color: var(--navy); }
+        .stars { color: #f5a623; letter-spacing: 2px; }
+        .stars .off { color: #d3dbe4; }
+        .link-btn { border: 1px solid var(--border); background: #fff; color: #b3382c; border-radius: 8px; padding: 6px 12px; font-size: 13px; font-weight: 600; cursor: pointer; }
+        .link-btn:hover { background: #fdecea; }
+        .empty { text-align: center; padding: 30px 10px; color: var(--text-muted); }
+
+        .field { margin-bottom: 16px; max-width: 440px; }
+        .field label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 14px; color: var(--navy); }
+        .field input { width: 100%; padding: 12px 14px; border: 1px solid var(--border); border-radius: 10px; background: var(--bg-alt); outline: none; }
+        .field input:focus { background: #fff; border-color: var(--teal); box-shadow: 0 0 0 3px var(--teal-soft); }
+        .field input[readonly] { color: var(--text-muted); cursor: not-allowed; }
+        .msg { color: var(--teal-dark); font-weight: 600; margin-top: 12px; min-height: 22px; }
+
+        .explore { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+        .explore a { padding: 22px; border: 1px solid var(--border); border-top: 4px solid var(--teal); border-radius: 12px; background: #fff; text-decoration: none; color: var(--navy); transition: var(--transition); }
+        .explore a:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+        .explore .ico { font-size: 26px; display: block; margin-bottom: 8px; }
+        .explore b { display: block; }
+        .explore span { color: var(--text-muted); font-size: 13.5px; }
+
+        /* ---------- welcome popup ---------- */
+        .welcome-pop { position: fixed; inset: 0; z-index: 10000; display: none; align-items: center; justify-content: center; background: rgba(8,24,52,.65); padding: 20px; }
+        .welcome-pop.show { display: flex; animation: fadeIn .3s ease; }
+        .welcome-box { width: 100%; max-width: 420px; padding: 40px 32px; text-align: center; background: #fff; border-radius: 20px; border-top: 5px solid var(--teal); box-shadow: 0 25px 60px rgba(0,0,0,.3); animation: fadeUp .5s ease; }
+        .welcome-box .big { font-size: 54px; }
+        .welcome-box h2 { color: var(--navy); font-size: 27px; font-weight: 700; margin: 10px 0 8px; }
+        .welcome-box p { color: var(--text-muted); margin-bottom: 22px; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        @media (max-width: 1100px) { .stats { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 860px) {
+            .dash-side { position: fixed; left: -280px; top: 0; z-index: 9000; transition: left .3s ease; }
+            .dash-side.open { left: 0; box-shadow: 0 0 0 100vmax rgba(8,24,52,.5); }
+            .menu-toggle { display: block; }
+            .dash-main { padding: 20px 16px 40px; }
+            .quick, .explore { grid-template-columns: 1fr; }
+            .welcome h2 { font-size: 26px; }
+            .dash-user .uname { display: none; }
+            .dash-user { padding: 6px; }
+        }
+        @media (max-width: 480px) { .stats { grid-template-columns: 1fr; } }
+    </style>
+</head>
+
+<body>
+
+    <div class="welcome-pop" id="welcomePop">
+        <div class="welcome-box">
+            <div class="big">👋</div>
+            <h2 id="popTitle">Welcome!</h2>
+            <p id="popText">You are now signed in to Belleville Dental.</p>
+            <button class="btn-theme" id="popBtn">Go to Dashboard</button>
+        </div>
+    </div>
+
+    <div class="dash">
+
+        <aside class="dash-side" id="side">
+            <a class="dash-brand" href="index.html">
+                <img src="images/belleville-dental-favicon.png" alt="Belleville Dental logo" width="36" height="36">
+                Belleville Dental
+            </a>
+
+            <nav class="dash-nav">
+                <button class="active" data-view="overview"><span class="ico">🏠</span> Overview</button>
+                <button data-view="ratings"><span class="ico">⭐</span> My Ratings</button>
+                <button data-view="explore"><span class="ico">🧭</span> Explore</button>
+                <button data-view="profile"><span class="ico">👤</span> Profile</button>
+                <a href="index.html"><span class="ico">🌐</span> Back to Website</a>
+            </nav>
+
+            <button class="logout dash-nav-btn" id="logoutBtn" style="padding:12px 14px;border:none;border-radius:10px;color:#fff;text-align:left;font-weight:600;font-size:15px;cursor:pointer;width:100%">
+                🚪 &nbsp;Logout
+            </button>
+        </aside>
+
+        <main class="dash-main">
+
+            <div class="dash-top">
+                <div style="display:flex;align-items:center;gap:12px">
+                    <button class="menu-toggle" id="menuToggle" aria-label="Menu">☰</button>
+                    <h1 id="pageTitle">Overview</h1>
+                </div>
+                <div class="dash-user">
+                    <div class="avatar" id="avatar">U</div>
+                    <span class="uname" id="topName">User</span>
+                </div>
+            </div>
+
+            <!-- OVERVIEW -->
+            <section class="view active" id="view-overview" style="padding:0;background:none">
+
+                <div class="welcome">
+                    <small>DASHBOARD</small>
+                    <h2 id="welcomeTitle">Welcome back!</h2>
+                    <p>Good to see you. Browse dental education, check your product ratings and manage your account from here.</p>
+                    <a href="index.html#professional" class="btn-theme">Start Learning</a>
+                </div>
+
+                <div class="stats">
+                    <div class="stat"><div class="ico">⭐</div><strong id="statRated">0</strong><span>Products rated</span></div>
+                    <div class="stat"><div class="ico">👁</div><strong id="statVisits">0</strong><span>Website visits</span></div>
+                    <div class="stat"><div class="ico">📅</div><strong id="statJoined">-</strong><span>Member since</span></div>
+                    <div class="stat"><div class="ico">✅</div><strong>Active</strong><span>Account status</span></div>
+                </div>
+
+                <div class="panel">
+                    <h3>Quick Access</h3>
+                    <p class="sub">Jump straight to a section of the website.</p>
+                    <div class="quick">
+                        <a href="index.html#professional"><span class="ico">🎓</span> Professional Education</a>
+                        <a href="index.html#patient"><span class="ico">🦷</span> Patient Education</a>
+                        <a href="index.html#research"><span class="ico">🔬</span> Research</a>
+                        <a href="index.html#products"><span class="ico">🪥</span> Products</a>
+                        <a href="index.html#queries"><span class="ico">💬</span> Send a Query</a>
+                        <a href="index.html#contact"><span class="ico">📞</span> Contact Us</a>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- RATINGS -->
+            <section class="view" id="view-ratings" style="padding:0;background:none">
+                <div class="panel">
+                    <h3>My Product Ratings</h3>
+                    <p class="sub">Products you have rated on the website.</p>
+                    <div id="ratingList"></div>
+                </div>
+            </section>
+
+            <!-- EXPLORE -->
+            <section class="view" id="view-explore" style="padding:0;background:none">
+                <div class="panel">
+                    <h3>Explore Belleville Dental</h3>
+                    <p class="sub">Everything available on the website.</p>
+                    <div class="explore">
+                        <a href="index.html#professional"><span class="ico">🎓</span><b>Professional Education</b><span>Courses, documents and case studies</span></a>
+                        <a href="index.html#patient"><span class="ico">🦷</span><b>Patient Education</b><span>Oral health basics and prevention</span></a>
+                        <a href="index.html#research"><span class="ico">🔬</span><b>Research</b><span>Latest research and media</span></a>
+                        <a href="index.html#products"><span class="ico">🪥</span><b>Products</b><span>Browse and rate oral-care products</span></a>
+                        <a href="index.html#gallery"><span class="ico">🖼️</span><b>Gallery</b><span>Our dental world</span></a>
+                        <a href="index.html#about"><span class="ico">💙</span><b>About Us</b><span>Our mission and approach</span></a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PROFILE -->
+            <section class="view" id="view-profile" style="padding:0;background:none">
+                <div class="panel">
+                    <h3>My Profile</h3>
+                    <p class="sub">Update your display name. Email cannot be changed.</p>
+                    <div class="field"><label for="pName">Full Name</label><input type="text" id="pName"></div>
+                    <div class="field"><label for="pEmail">Email</label><input type="email" id="pEmail" readonly></div>
+                    <button class="btn-theme" id="saveProfile">Save Changes</button>
+                    <p class="msg" id="profileMsg"></p>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        (function () {
+
+            var loggedIn = localStorage.getItem("bellevilleLoggedInUser");
+
+            /* not signed in -> back to website */
+            if (!loggedIn) {
+                window.location.replace("index.html");
+                return;
+            }
+
+            function $(id) { return document.getElementById(id); }
+
+            function getUser() {
+                try { return JSON.parse(localStorage.getItem("bellevilleUser")) || {}; }
+                catch (e) { return {}; }
+            }
+
+            function firstName(n) { return (n || "").trim().split(/\s+/)[0] || "there"; }
+
+            /* ---------- fill user info ---------- */
+            function fillUser() {
+                var name = localStorage.getItem("bellevilleLoggedInUser");
+                var user = getUser();
+                $("avatar").textContent = name.charAt(0).toUpperCase();
+                $("topName").textContent = name;
+                $("welcomeTitle").textContent = "Welcome, " + firstName(name) + "!";
+                $("pName").value = name;
+                $("pEmail").value = user.email || "";
+                var joined = user.joined ? new Date(user.joined) : null;
+                $("statJoined").textContent = joined
+                    ? joined.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })
+                    : "Today";
+            }
+
+            /* ---------- ratings ---------- */
+            function getRatings() {
+                var list = [];
+                for (var i = 0; i < localStorage.length; i++) {
+                    var k = localStorage.key(i);
+                    if (k.indexOf("rating_") === 0) {
+                        list.push({ key: k, name: k.slice(7), value: parseInt(localStorage.getItem(k)) || 0 });
+                    }
+                }
+                return list.sort(function (a, b) { return a.name.localeCompare(b.name); });
+            }
+
+            function renderRatings() {
+                var list = getRatings();
+                $("statRated").textContent = list.length;
+                $("statVisits").textContent = localStorage.getItem("bellevilleVisitors") || 1;
+
+                var box = $("ratingList");
+                if (!list.length) {
+                    box.innerHTML = '<div class="empty">You have not rated any product yet.<br><br><a class="btn-theme" href="index.html#products">Browse Products</a></div>';
+                    return;
+                }
+                box.innerHTML = "";
+                list.forEach(function (r) {
+                    var row = document.createElement("div");
+                    row.className = "rating-row";
+                    var stars = "";
+                    for (var s = 1; s <= 5; s++) {
+                        stars += s <= r.value ? "★" : '<span class="off">★</span>';
+                    }
+                    var left = document.createElement("div");
+                    var b = document.createElement("b");
+                    b.textContent = r.name;
+                    var st = document.createElement("div");
+                    st.className = "stars";
+                    st.innerHTML = stars + ' <span style="color:var(--text-muted);letter-spacing:0;font-size:13px">' + r.value + "/5</span>";
+                    left.appendChild(b); left.appendChild(st);
+                    var btn = document.createElement("button");
+                    btn.className = "link-btn";
+                    btn.textContent = "Remove";
+                    btn.onclick = function () {
+                        localStorage.removeItem(r.key);
+                        renderRatings();
+                    };
+                    row.appendChild(left); row.appendChild(btn);
+                    box.appendChild(row);
+                });
+            }
+
+            /* ---------- view switching ---------- */
+            var titles = { overview: "Overview", ratings: "My Ratings", explore: "Explore", profile: "Profile" };
+
+            function showView(name) {
+                document.querySelectorAll(".view").forEach(function (v) { v.classList.remove("active"); });
+                $("view-" + name).classList.add("active");
+                document.querySelectorAll(".dash-nav button").forEach(function (b) {
+                    b.classList.toggle("active", b.getAttribute("data-view") === name);
+                });
+                $("pageTitle").textContent = titles[name];
+                $("side").classList.remove("open");
+                if (name === "ratings" || name === "overview") renderRatings();
+                window.scrollTo(0, 0);
+            }
+
+            document.querySelectorAll(".dash-nav button").forEach(function (b) {
+                b.addEventListener("click", function () { showView(b.getAttribute("data-view")); });
+            });
+
+            $("menuToggle").addEventListener("click", function () { $("side").classList.toggle("open"); });
+
+            /* ---------- save profile ---------- */
+            $("saveProfile").addEventListener("click", function () {
+                var n = $("pName").value.trim();
+                if (n.length < 2) { $("profileMsg").textContent = "Please enter a valid name."; return; }
+                var user = getUser();
+                user.name = n;
+                localStorage.setItem("bellevilleUser", JSON.stringify(user));
+                localStorage.setItem("bellevilleLoggedInUser", n);
+                fillUser();
+                $("profileMsg").textContent = "Profile updated ✓";
+            });
+
+            /* ---------- logout ---------- */
+            $("logoutBtn").addEventListener("click", function () {
+                localStorage.removeItem("bellevilleLoggedInUser");
+                window.location.href = "index.html";
+            });
+
+            /* ---------- welcome popup (only right after login / signup) ---------- */
+            fillUser();
+            renderRatings();
+
+            var flag = sessionStorage.getItem("bellevilleJustLoggedIn");
+            if (flag) {
+                sessionStorage.removeItem("bellevilleJustLoggedIn");
+                var name = localStorage.getItem("bellevilleLoggedInUser");
+                $("popTitle").textContent = (flag === "signup" ? "Welcome, " : "Welcome back, ") + firstName(name) + "!";
+                $("popText").textContent = flag === "signup"
+                    ? "Your account has been created. Let's get started."
+                    : "You have signed in successfully.";
+                $("welcomePop").classList.add("show");
+
+                function closePop() { $("welcomePop").classList.remove("show"); }
+                $("popBtn").addEventListener("click", closePop);
+                setTimeout(closePop, 3500);
+            }
+
+        })();
+    </script>
+
+</body>
+
+</html>
